@@ -1,0 +1,22 @@
+# Local secrets and working data
+данные/api_key.bin
+данные/данные.json
+данные/данные_до_импорта_формы_учета.json
+
+# Source documents can contain personal and operational information
+*.doc
+*.docx
+*.xls
+*.xlsx
+
+# Generated reports and caches
+отчеты/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
