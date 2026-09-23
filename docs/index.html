@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="МИН МОЛ — учет мероприятий и отчетность молодежной политики">
+  <title>МИН МОЛ | Отчетность</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">ММ</div>
+    <div class="brand-copy"><strong>МИН МОЛ</strong><span>Муниципальная отчетность молодежной политики</span></div>
+    <div class="year-badge"><small>ОТЧЕТНЫЙ ГОД</small><b id="header-year"></b></div>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav">Разделы</button>
+  </header>
+  <div class="app-shell">
+    <nav class="sidebar" id="main-nav" aria-label="Основные разделы">
+      <button class="nav-item active" data-view="overview"><span>01</span>Обзор</button>
+      <button class="nav-item" data-view="targets"><span>02</span>Целевые показатели</button>
+      <button class="nav-item" data-view="events"><span>03</span>Мероприятия</button>
+      <button class="nav-item" data-view="reports"><span>04</span>Отчеты</button>
+      <button class="nav-item" data-view="forms"><span>05</span>Настройка форм</button>
+      <button class="nav-item" data-view="press"><span>06</span>Пресс-релизы</button>
+      <div class="storage-note"><b>Локальная версия</b><br>Данные хранятся только в этом браузере.</div>
+    </nav>
+    <main id="main" tabindex="-1">
+      <section class="view active" id="view-overview" aria-labelledby="title-overview">
+        <div class="page-head"><div><p class="eyebrow">РАБОЧАЯ ПАНЕЛЬ</p><h1 id="title-overview">Состояние отчетности</h1></div><span class="period-chip" id="today-period"></span></div>
+        <div class="metrics" id="metrics"></div>
+        <div class="grid two">
+          <form class="panel" id="org-form"><div class="panel-head"><h2>Реквизиты</h2><span>Используются в отчетах</span></div><label>Организация<input id="organization" required></label><label>Отчетный год<input id="report-year" type="number" min="2020" max="2100" required></label><button class="button primary" type="submit">Сохранить реквизиты</button></form>
+          <div class="panel"><div class="panel-head"><h2>Управление данными</h2><span>JSON без API-ключа</span></div><p class="muted">Создавайте резервную копию перед очисткой браузера. Импорт заменяет текущие данные.</p><div class="button-row"><button class="button" id="export-json">Экспорт JSON</button><label class="button file-button">Импорт JSON<input id="import-json" type="file" accept="application/json,.json"></label><button class="button danger" id="reset-data">Сбросить</button></div></div>
+        </div>
+        <div class="panel guide"><div class="panel-head"><h2>Контрольный маршрут</h2></div><ol><li>Заполните нарастающие планы по каждому направлению.</li><li>Создавайте карточки заранее: незаполненные карточки сохраняются как черновики.</li><li>Проверяйте перенос остатка и фактический охват в таблице показателей.</li><li>Перед выгрузкой проверьте приложения в предпросмотре.</li></ol></div>
+      </section>
+
+      <section class="view" id="view-targets" aria-labelledby="title-targets">
+        <div class="page-head"><div><p class="eyebrow">ПЛАН / ФАКТ</p><h1 id="title-targets">Целевые показатели</h1></div><p class="head-note">Планы задаются нарастающим итогом</p></div>
+        <form class="panel inline-form" id="plan-form"><label>Направление<select id="plan-target"></select></label><label>Месяц<select id="plan-month"></select></label><label>План нарастающим<input id="plan-value" type="number" min="0" required></label><button class="button accent" type="submit">Записать план</button></form>
+        <div class="table-wrap"><table><thead><tr><th>Направление</th><th>Месяц</th><th>План нарастающим</th><th>Разница планов</th><th>Факт за месяц</th><th>Факт нарастающим</th><th>Необходимо − сделано</th><th>Нужно с остатком</th></tr></thead><tbody id="targets-table"></tbody></table></div>
+      </section>
+
+      <section class="view" id="view-events" aria-labelledby="title-events">
+        <div class="page-head"><div><p class="eyebrow">ЖУРНАЛ</p><h1 id="title-events">Мероприятия</h1></div><button class="button accent" id="new-event">+ Новое мероприятие</button></div>
+        <div class="filters"><label>Отчетный месяц<select id="event-month-filter"></select></label><label class="grow">Поиск<input id="event-search" type="search" placeholder="Дата или название"></label></div>
+        <div class="events-layout"><div class="table-wrap"><table><thead><tr><th>Дата</th><th>Отчет</th><th>Название</th><th>ЦП</th><th>Охват</th><th>Состояние</th></tr></thead><tbody id="events-table"></tbody></table><p class="empty" id="events-empty">Мероприятия не найдены</p></div>
+          <form class="panel event-form" id="event-form"><div class="panel-head"><h2 id="event-form-title">Новая карточка</h2><span id="event-period-hint">Укажите дату</span></div><input id="event-id" type="hidden"><div id="standard-event-fields"></div><div id="custom-event-fields"></div><fieldset><legend>Целевые показатели</legend><div class="checks" id="event-target-checks"></div><label class="check"><input id="auto-classify" type="checkbox" checked> Определять автоматически по ключевым словам</label><button class="link-button" type="button" id="classify-now">Определить сейчас</button></fieldset><div class="button-row"><button class="button primary" type="submit">Сохранить</button><button class="button" type="button" id="clear-event">Очистить</button><button class="button danger push" type="button" id="delete-event">Удалить</button></div></form>
+        </div>
+      </section>
+
+      <section class="view" id="view-reports" aria-labelledby="title-reports">
+        <div class="page-head"><div><p class="eyebrow">ВЫГРУЗКА</p><h1 id="title-reports">Отчеты</h1></div></div>
+        <div class="panel report-controls"><label>Отчетный месяц<select id="report-month"></select></label><div class="period-display" id="report-period"></div><div class="button-row"><button class="button accent" id="export-all">Выгрузить все 3 отчета</button><button class="button" id="export-app1">Приложение 1 DOCX</button><button class="button" id="export-app2">Приложение 2 DOCX</button><button class="button" id="export-xlsx">Сводка XLSX</button></div></div>
+        <div class="preview-tabs" role="tablist"><button class="active" data-preview="app1" role="tab">Приложение 1</button><button data-preview="app2" role="tab">Приложение 2</button></div><div class="panel report-preview" id="report-preview"></div>
+      </section>
+
+      <section class="view" id="view-forms" aria-labelledby="title-forms">
+        <div class="page-head"><div><p class="eyebrow">КОНСТРУКТОР</p><h1 id="title-forms">Настройка форм</h1></div></div>
+        <div class="subtabs" role="tablist"><button class="active" data-formtab="target-settings">Показатели</button><button data-formtab="report-settings">Отчетные формы</button><button data-formtab="card-settings">Карточка мероприятия</button></div>
+        <div class="formtab active" id="target-settings"><div class="settings-layout"><div class="panel"><div class="panel-head"><h2>Показатели</h2><button class="button small" id="add-target">+ Добавить</button></div><div id="target-settings-list" class="settings-list"></div></div><form class="panel" id="target-settings-form"><div class="panel-head"><h2>Параметры показателя</h2></div><input id="target-id" type="hidden"><label>Код<input id="target-code" required></label><label>№ строки в приложении 1<input id="target-row" required></label><label>Рабочее название<input id="target-name" required></label><label>Официальное описание строки<textarea id="target-report-name" rows="4" required></textarea></label><label>Заголовок раздела приложения 2<textarea id="target-section" rows="3" required></textarea></label><label>Ключевые слова через запятую<textarea id="target-keywords" rows="3"></textarea></label><div class="button-row"><button class="button primary" type="submit">Сохранить</button><button class="button danger push" id="delete-target" type="button">Удалить</button></div></form></div></div>
+        <form class="formtab panel" id="report-settings"><div class="panel-head"><h2>Названия в приложениях</h2></div><div id="report-settings-fields"></div><button class="button primary" type="submit">Сохранить формы</button></form>
+        <div class="formtab" id="card-settings"><div class="grid two"><form class="panel" id="card-labels-form"><div class="panel-head"><h2>Стандартные поля</h2></div><div id="card-label-fields"></div><button class="button primary" type="submit">Сохранить названия</button></form><div class="panel"><div class="panel-head"><h2>Дополнительные поля</h2><button class="button small" id="add-custom-field">+ Добавить</button></div><div id="custom-fields-list" class="settings-list"></div></div></div></div>
+      </section>
+
+      <section class="view" id="view-press" aria-labelledby="title-press">
+        <div class="page-head"><div><p class="eyebrow">КОММУНИКАЦИИ</p><h1 id="title-press">Пресс-релизы</h1></div></div>
+        <div class="panel api-panel"><div class="panel-head"><h2>DeepSeek-совместимый API</h2><span>Ключ не попадает в экспорт</span></div><div class="grid two"><label>URL API<input id="api-url" type="url"></label><label>Модель<input id="api-model"></label></div><label>API-ключ<input id="api-key" type="password" autocomplete="off"></label><div class="button-row"><label class="check"><input id="remember-key" type="checkbox"> Запомнить в localStorage (менее безопасно)</label><button class="link-button push" id="clear-key">Удалить ключ</button></div><p class="warning">Запрос выполняется напрямую из браузера. Если API не разрешает CORS для этого сайта, браузер заблокирует запрос. Это ограничение сервера API, а не ошибка данных.</p></div>
+        <div class="panel"><label>Мероприятие<select id="press-event"></select></label><div class="event-context" id="press-context"></div><label>Описание мероприятия<textarea id="press-description" rows="4" readonly></textarea></label><label>Инструкция для модели<textarea id="press-instruction" rows="3"></textarea></label><div class="button-row"><button class="button accent" id="generate-press">Сгенерировать</button><button class="button" id="save-press">Сохранить текст</button><button class="button" id="copy-press">Копировать</button><button class="button" id="export-press">Экспорт DOCX</button></div><label>Текст пресс-релиза<textarea id="press-text" rows="15"></textarea></label></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
