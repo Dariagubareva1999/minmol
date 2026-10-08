@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Книга обратной связи Министерства культуры ЛНР">
+  <title>Книга обратной связи | Министерство культуры ЛНР</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">МК</span><span><b>Книга обратной связи</b><small>Министерство культуры ЛНР</small></span></div>
+    <div class="top-actions"><button class="access" id="accessibility" type="button">◉ Версия для слабовидящих</button><button class="admin-link" id="admin-open" type="button">Вход для администратора</button></div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">ОТКРЫТЫЙ ДИАЛОГ</p>
+        <h1>Ваш голос<br><em>важен</em></h1>
+        <p class="lead">Расскажите Министерству культуры ЛНР и учреждениям культуры, что стоит изменить, сохранить или сделать лучше.</p>
+        <div class="hero-actions"><a class="button primary" href="#write">Оставить обращение →</a><a class="button ghost" href="#messages">Открытая книга</a></div>
+      </div>
+      <div class="hero-art" aria-hidden="true"><span>✦</span><strong>Слышим<br>меняем</strong><small>Честно · Бережно · Вместе</small></div>
+    </section>
+
+    <section class="stats wrap"><div><b>100%</b><span>анонимно</span></div><div><b>1–2 мин</b><span>на заполнение</span></div><div><b id="count">0</b><span>обращений в книге</span></div></section>
+
+    <section class="content wrap" id="write">
+      <div class="section-head"><p class="eyebrow">ВАШЕ ОБРАЩЕНИЕ</p><h2>О чём вы хотите<br><em>нам сказать?</em></h2><p>Не указывайте имя, телефон или другие личные данные. Обращение передаётся учреждению без персональных данных.</p></div>
+      <form class="form-card" id="feedback-form">
+        <label>Учреждение культуры ЛНР<select id="institution" required></select></label>
+        <fieldset><legend>01 · Выберите тип обращения</legend><div class="types"><label><input type="radio" name="type" value="Жалоба" checked><span>⚠<b>Жалоба</b><small>Есть проблема</small></span></label><label><input type="radio" name="type" value="Предложение"><span>✦<b>Предложение</b><small>Есть идея</small></span></label><label><input type="radio" name="type" value="Благодарность"><span>♡<b>Благодарность</b><small>Хочу похвалить</small></span></label><label><input type="radio" name="type" value="Вопрос"><span>?<b>Вопрос</b><small>Нужен ответ</small></span></label></div></fieldset>
+        <fieldset><legend>02 · Расскажите подробнее</legend><div class="two"><label>Тема<select id="topic"><option>Мероприятия и концерты</option><option>Творческие коллективы</option><option>Здание и удобство</option><option>Обслуживание</option><option>Доступная среда</option><option>Другое</option></select></label><label>Дата события <input id="date" type="date"></label></div><label>Ваше сообщение<textarea id="message" minlength="15" maxlength="1000" required placeholder="Опишите ситуацию или предложение минимум в 15 символах"></textarea><small class="counter"><span id="length">0</span> / 1000</small></label></fieldset>
+        <label class="check"><input id="publish" type="checkbox" checked> Разрешить публикацию после проверки <small>Администратор проверит текст перед размещением</small></label>
+        <button class="button primary submit" type="submit">Отправить анонимно →</button>
+        <p class="privacy">Мы не просим ваше имя и контакты. В этой демонстрационной версии обращения сохраняются в браузере устройства.</p>
+      </form>
+    </section>
+
+    <section class="how wrap"><div class="section-head"><p class="eyebrow">КАК ЭТО РАБОТАЕТ</p><h2>Слышим каждого.<br><em>Меняемся вместе.</em></h2></div><div class="steps"><article><b>01</b><h3>Вы пишете</h3><p>Анонимно описываете ситуацию или идею.</p></article><article><b>02</b><h3>Мы читаем</h3><p>Ответственные сотрудники изучают обращение.</p></article><article><b>03</b><h3>Принимаем меры</h3><p>Публикуем статус и результат работы.</p></article></div></section>
+
+    <section class="messages wrap" id="messages"><div class="section-head inline"><div><p class="eyebrow">ОТКРЫТАЯ КНИГА</p><h2>Что говорят <em>посетители</em></h2></div><select id="filter"><option value="all">Все учреждения</option></select></div><div id="message-list" class="message-list"></div></section>
+  </main>
+  <footer class="footer wrap"><b>Книга обратной связи</b><span>Министерство культуры ЛНР</span><a href="#main">↑ Наверх</a><p>Перечень учреждений сформирован по открытым публичным страницам учреждений и региональным справочным материалам. Перед официальным запуском его следует сверить с актуальным реестром Министерства культуры ЛНР.</p></footer>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="modal" id="admin-modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="admin-close" type="button">×</button><p class="eyebrow">РАЗДЕЛ УПРАВЛЕНИЯ</p><h2>Вход для<br><em>администратора</em></h2><form id="admin-login"><label>Логин<input id="admin-login-name" autocomplete="username" required></label><label>Пароль<input id="admin-password" type="password" autocomplete="current-password" required></label><button class="button primary" type="submit">Войти →</button><p class="privacy">Демонстрационный вход: <b>admin</b> / <b>admin123</b></p></form><div class="admin-panel" id="admin-panel"><div class="admin-head"><b>Обращения</b><button class="button ghost" id="admin-logout" type="button">Выйти</button></div><div id="admin-list"></div></div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
